@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.example</groupId>
+    <artifactId>TwitterSentiment</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+
+        <dl4j-master.version>1.0.0-M2</dl4j-master.version>
+        <!-- Change the nd4j.backend property to nd4j-cuda-X-platform to use CUDA GPUs -->
+<!--         <nd4j.backend>nd4j-cuda-11.6-platform</nd4j.backend>-->
+        <nd4j.backend>nd4j-native</nd4j.backend>
+        <java.version>1.8</java.version>
+        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+        <maven.minimum.version>3.3.1</maven.minimum.version>
+        <exec-maven-plugin.version>1.4.0</exec-maven-plugin.version>
+        <maven-shade-plugin.version>2.4.3</maven-shade-plugin.version>
+        <jcommon.version>1.0.23</jcommon.version>
+        <jfreechart.version>1.0.13</jfreechart.version>
+        <logback.version>1.1.7</logback.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <junit.version>5.8.0-M1</junit.version>
+        <javacv.version>1.5.5</javacv.version>
+    </properties>
+
+
+    <dependencies>
+<!--        &lt;!&ndash; deeplearning4j-core: contains main functionality and neural networks &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.deeplearning4j</groupId>-->
+<!--            <artifactId>deeplearning4j-core</artifactId>-->
+<!--            <version>${dl4j-master.version}</version>-->
+<!--        </dependency>-->
+
+<!--        &lt;!&ndash;-->
+<!--        ND4J backend: every project needs one of these. The backend defines the hardware on which network training-->
+<!--        will occur. "nd4j-native-platform" is for CPUs only (for running on all operating systems).-->
+<!--        &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.nd4j</groupId>-->
+<!--            <artifactId>nd4j-native</artifactId>-->
+<!--            <version>${dl4j-master.version}</version>-->
+<!--        </dependency>-->
+
+<!--        &lt;!&ndash; CUDA: to use GPU for training (CUDA) instead of CPU, uncomment this, and remove nd4j-native-platform &ndash;&gt;-->
+<!--        &lt;!&ndash; Requires CUDA to be installed to use. Change the version (8.0, 9.0, 9.1) to change the CUDA version &ndash;&gt;-->
+
+
+<!--        &lt;!&ndash; Optional, but recommended: if you use CUDA, also use CuDNN. To use this, CuDNN must also be installed &ndash;&gt;-->
+<!--        &lt;!&ndash; See: https://deeplearning4j.konduit.ai/config/backends/config-cudnn#using-deeplearning-4-j-with-cudnn &ndash;&gt;-->
+
+
+<!--        <dependency>-->
+<!--            <groupId>ch.qos.logback</groupId>-->
+<!--            <artifactId>logback-classic</artifactId>-->
+<!--            <version>${logback.version}</version>-->
+<!--        </dependency>-->
+
+<!--        <dependency>-->
+<!--            <groupId>org.nd4j</groupId>-->
+<!--            <artifactId>nd4j-cuda-11.2</artifactId>-->
+<!--            <version>1.0.0-M1</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.nd4j</groupId>-->
+<!--            <artifactId>nd4j-cuda-11.2</artifactId>-->
+<!--            <version>1.0.0-M1</version>-->
+<!--            <classifier>linux-x86_64-cudnn</classifier>-->
+<!--        </dependency>-->
+
+<!--        <dependency>-->
+<!--            <groupId>org.deeplearning4j</groupId>-->
+<!--            <artifactId>deeplearning4j-nlp</artifactId>-->
+<!--            <version>1.0.0-M2</version>-->
+<!--        </dependency>-->
+
+
+<!--        <dependency>-->
+<!--            <groupId>org.apache.httpcomponents</groupId>-->
+<!--            <artifactId>httpclient</artifactId>-->
+<!--            <version>4.5.13</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.json</groupId>-->
+<!--            <artifactId>json</artifactId>-->
+<!--            <version>20220320</version>-->
+<!--        </dependency>-->
+
+
+
+
+
+
+        <dependency>
+            <groupId>org.nd4j</groupId>
+            <artifactId>${nd4j.backend}</artifactId>
+            <version>${dl4j-master.version}</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.datavec</groupId>
+            <artifactId>datavec-api</artifactId>
+            <version>${dl4j-master.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.datavec</groupId>
+            <artifactId>datavec-data-image</artifactId>
+            <version>${dl4j-master.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.datavec</groupId>
+            <artifactId>datavec-local</artifactId>
+            <version>${dl4j-master.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>deeplearning4j-datasets</artifactId>
+            <version>${dl4j-master.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>deeplearning4j-core</artifactId>
+            <version>${dl4j-master.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>resources</artifactId>
+            <version>${dl4j-master.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>deeplearning4j-ui</artifactId>
+            <version>${dl4j-master.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>deeplearning4j-zoo</artifactId>
+            <version>${dl4j-master.version}</version>
+        </dependency>
+        <!-- ParallelWrapper & ParallelInference live here -->
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>deeplearning4j-parallel-wrapper</artifactId>
+            <version>${dl4j-master.version}</version>
+        </dependency>
+        <!-- Used in the feedforward/classification/MLP* and feedforward/regression/RegressionMathFunctions example -->
+        <dependency>
+            <groupId>jfree</groupId>
+            <artifactId>jfreechart</artifactId>
+            <version>${jfreechart.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jfree</groupId>
+            <artifactId>jcommon</artifactId>
+            <version>${jcommon.version}</version>
+        </dependency>
+        <!-- Used for downloading data in some of the examples -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.3.5</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.bytedeco</groupId>
+            <artifactId>javacv-platform</artifactId>
+            <version>${javacv.version}</version>
+        </dependency>
+
+        <!-- Test dependency. Ignore for your own application. -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+</project>
