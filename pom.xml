@@ -132,6 +132,12 @@
 
         <dependency>
             <groupId>org.deeplearning4j</groupId>
+            <artifactId>deeplearning4j-nlp</artifactId>
+            <version>${dl4j-master.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
             <artifactId>resources</artifactId>
             <version>${dl4j-master.version}</version>
         </dependency>
@@ -195,6 +201,13 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.opennlp</groupId>
+            <artifactId>opennlp-tools</artifactId>
+            <version>1.9.4</version>
+        </dependency>
+
     </dependencies>
 
 </project>
