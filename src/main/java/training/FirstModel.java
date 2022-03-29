@@ -19,7 +19,7 @@ public class FirstModel {
     protected static final Logger log = LoggerFactory.getLogger(FirstModel.class);
 
     public static void main(String[] args) throws Exception {
-        File file = new ClassPathResource("news-data-malay.csv").getFile();
+        File file = new ClassPathResource("strong-negatives.txt").getFile();
 
         log.info("Load & Vectorize Sentences....");
         // Strip white space before and after for each line
@@ -37,19 +37,19 @@ public class FirstModel {
         log.info("Building model....");
         Word2Vec vec = new Word2Vec.Builder()
                 .minWordFrequency(5)
-                .layerSize(100)
+                .layerSize(300)
                 .seed(42)
                 .windowSize(5)
                 .iterate(iter)
                 .tokenizerFactory(t)
                 .build();
 
-//        log.info("Fitting Word2Vec model....");
-//        vec.fit();
+        log.info("Fitting Word2Vec model....");
+        vec.fit();
 
-//        log.info("Save vectors....");
-//        WordVectorSerializer.writeWord2VecModel(vec, "pathToSaveModel.txt");
-        WordVectors wordVectors = WordVectorSerializer.loadStaticModel(new File("word2vec-ms-socialmedia-256.npy"));
+        log.info("Save vectors....");
+        WordVectorSerializer.writeWord2VecModel(vec, "./src/main/resources/savedModel/malayTwitterNegatives.txt");
+        WordVectors wordVectors = WordVectorSerializer.loadStaticModel(new File("./src/main/resources/savedModel/malayTwitterNegatives.txt"));
 
 //        Word2Vec word2Vec = WordVectorSerializer.readWord2VecModel("pathToSaveModel.txt");
 //        WeightLookupTable weightLookupTable = word2Vec.lookupTable();
