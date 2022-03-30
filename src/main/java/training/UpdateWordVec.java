@@ -19,7 +19,7 @@ public class UpdateWordVec {
 
     public static void main(String[] args) {
         Word2Vec word2Vec = WordVectorSerializer.readWord2VecModel("./src/main/resources/wordVector/twitter100WithName.txt");
-        File file = new ClassPathResource("").getFile();
+        File file = new ClassPathResource("").getFile(); //add new txt data file to update model
         SentenceIterator iterator = new LineSentenceIterator(file);
         TokenizerFactory tokenizerFactory = new DefaultTokenizerFactory();
         tokenizerFactory.setTokenPreProcessor(new CommonPreprocessor());
