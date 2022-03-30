@@ -58,7 +58,7 @@ public class PrepareWordVec {
         vec.fit();
 
         // Write word vectors to a file
-        WordVectorSerializer.writeWordVectors(vec,"./src/main/resources/wordVector/twitter100WithName.txt");
+        WordVectorSerializer.writeWord2VecModel(vec,"./src/main/resources/wordVector/twitter100WithName.txt");
 
         log.info("Closest Words: ");
         Collection<String> list = vec.wordsNearest("hari", 10);
