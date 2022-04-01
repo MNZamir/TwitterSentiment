@@ -6,6 +6,7 @@ import org.deeplearning4j.models.embeddings.loader.WordVectorSerializer;
 import org.deeplearning4j.models.embeddings.wordvectors.WordVectors;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
+import org.deeplearning4j.nn.conf.layers.DenseLayer;
 import org.deeplearning4j.nn.conf.layers.LSTM;
 import org.deeplearning4j.nn.conf.layers.RnnOutputLayer;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
@@ -79,10 +80,13 @@ public class FirstModel {
                 .weightInit(WeightInit.XAVIER)
 //                .gradientNormalization(GradientNormalization.ClipElementWiseAbsoluteValue).gradientNormalizationThreshold(1.0)
                 .list()
-                .layer( new LSTM.Builder().nIn(input).nOut(200)
+                .layer(new DenseLayer.Builder()
+                        .nIn(input)
+                        .)
+                .layer( new LSTM.Builder().nIn(input).nOut(64)
                         .activation(Activation.TANH).build())
                 .layer(new RnnOutputLayer.Builder().activation(Activation.SOFTMAX)
-                        .lossFunction(LossFunctions.LossFunction.MCXENT).nIn(200).nOut(output).build())
+                        .lossFunction(LossFunctions.LossFunction.MCXENT).nIn(64).nOut(output).build())
                 .build();
 
         MultiLayerNetwork net = new MultiLayerNetwork(conf);
