@@ -32,9 +32,9 @@ public class TweetsIterator implements DataSetIterator {
     private final String dataDirectory;
     private final List<Pair<String, List<String>>> categoryData = new ArrayList<>();
     private int cursor = 0;
-    private int totalNews = 0;
+    private int totalTweets = 0;
     private final TokenizerFactory tokenizerFactory;
-    private int newsPosition = 0;
+    private int tweetsPosition = 0;
     private final List<String> labels;
     private int currCategory = 0;
 
@@ -75,32 +75,32 @@ public class TweetsIterator implements DataSetIterator {
 
     @Override
     public DataSet next(int num) {
-        if (cursor >= this.totalNews) throw new NoSuchElementException();
+        if (cursor >= this.totalTweets) throw new NoSuchElementException();
         return nextDataSet(num);
     }
 
     private DataSet nextDataSet(int num) {
-        // Loads news into news list from categoryData List along with category of each news
-        List<String> news = new ArrayList<>(num);
+        // Loads tweets into tweets list from categoryData List along with category of each news
+        List<String> tweets = new ArrayList<>(num);
         int[] category = new int[num];
 
-        for (int i = 0; i < num && cursor < this.totalNews; i++) {
+        for (int i = 0; i < num && cursor < this.totalTweets; i++) {
             if (currCategory < categoryData.size()) {
-                news.add(this.categoryData.get(currCategory).getValue().get(newsPosition));
+                tweets.add(this.categoryData.get(currCategory).getValue().get(tweetsPosition));
                 category[i] = Integer.parseInt(this.categoryData.get(currCategory).getKey().split(",")[0]);
                 currCategory++;
                 cursor++;
             } else {
                 currCategory = 0;
-                newsPosition++;
+                tweetsPosition++;
                 i--;
             }
         }
 
-        //Second: tokenize news and filter out unknown words
-        List<List<String>> allTokens = new ArrayList<>(news.size());
+        //Second: tokenize tweets and filter out unknown words
+        List<List<String>> allTokens = new ArrayList<>(tweets.size());
         maxLength = 0;
-        for (String s : news) {
+        for (String s : tweets) {
             List<String> tokens = tokenizerFactory.create(s).getTokens();
             List<String> tokensFiltered = new ArrayList<>();
             for (String t : tokens) {
@@ -110,25 +110,25 @@ public class TweetsIterator implements DataSetIterator {
             maxLength = Math.max(maxLength, tokensFiltered.size());
         }
 
-        //If longest news exceeds 'truncateLength': only take the first 'truncateLength' words
+        //If longest tweets exceeds 'truncateLength': only take the first 'truncateLength' words
         //System.out.println("maxLength : " + maxLength);
         if (maxLength > truncateLength) maxLength = truncateLength;
 
         //Create data for training
-        //Here: we have news.size() examples of varying lengths
-        INDArray features = Nd4j.create(news.size(), vectorSize, maxLength);
-        INDArray labels = Nd4j.create(news.size(), this.categoryData.size(), maxLength);    //Three labels: Crime, Politics, Bollywood
+        //Here: we have tweets.size() examples of varying lengths
+        INDArray features = Nd4j.create(tweets.size(), vectorSize, maxLength);
+        INDArray labels = Nd4j.create(tweets.size(), this.categoryData.size(), maxLength);    //Three labels: Crime, Politics, Bollywood
 
-        //Because we are dealing with news of different lengths and only one output at the final time step: use padding arrays
+        //Because we are dealing with tweets of different lengths and only one output at the final time step: use padding arrays
         //Mask arrays contain 1 if data is present at that time step for that example, or 0 if data is just padding
-        INDArray featuresMask = Nd4j.zeros(news.size(), maxLength);
-        INDArray labelsMask = Nd4j.zeros(news.size(), maxLength);
+        INDArray featuresMask = Nd4j.zeros(tweets.size(), maxLength);
+        INDArray labelsMask = Nd4j.zeros(tweets.size(), maxLength);
 
         int[] temp = new int[2];
-        for (int i = 0; i < news.size(); i++) {
+        for (int i = 0; i < tweets.size(); i++) {
             List<String> tokens = allTokens.get(i);
             temp[0] = i;
-            //Get word vectors for each word in news, and put them in the training data
+            //Get word vectors for each word in tweets, and put them in the training data
             for (int j = 0; j < tokens.size() && j < maxLength; j++) {
                 String token = tokens.get(j);
                 INDArray vector = wordVectors.getWordVectorMatrix(token);
@@ -157,8 +157,8 @@ public class TweetsIterator implements DataSetIterator {
      * @throws IOException If file cannot be read
      */
     public INDArray loadFeaturesFromFile(File file, int maxLength) throws IOException {
-        String news = FileUtils.readFileToString(file, (Charset)null);
-        return loadFeaturesFromString(news, maxLength);
+        String tweets = FileUtils.readFileToString(file, (Charset)null);
+        return loadFeaturesFromString(tweets, maxLength);
     }
 
     /**
@@ -190,7 +190,7 @@ public class TweetsIterator implements DataSetIterator {
     }
 
     /*
-    This function loads news headlines from files stored in resources into categoryData List.
+    This function loads tweets headlines from files stored in resources into categoryData List.
      */
     private void populateData(boolean train) {
         File categories = new File(this.dataDirectory + File.separator + "categories.txt");
@@ -207,7 +207,7 @@ public class TweetsIterator implements DataSetIterator {
                 List<String> tempList = new ArrayList<>();
                 while ((tempCurrLine = currBR.readLine()) != null) {
                     tempList.add(tempCurrLine);
-                    this.totalNews++;
+                    this.totalTweets++;
                 }
                 currBR.close();
                 Pair<String, List<String>> tempPair = Pair.of(temp, tempList);
@@ -231,7 +231,7 @@ public class TweetsIterator implements DataSetIterator {
     @Override
     public void reset() {
         cursor = 0;
-        newsPosition = 0;
+        tweetsPosition = 0;
         currCategory = 0;
     }
 
@@ -261,7 +261,7 @@ public class TweetsIterator implements DataSetIterator {
 
     @Override
     public boolean hasNext() {
-        return cursor < this.totalNews;
+        return cursor < this.totalTweets;
     }
 
     @Override
@@ -333,12 +333,6 @@ public class TweetsIterator implements DataSetIterator {
                     tokenizerFactory);
         }
 
-        public String toString() {
-            return "org.deeplearning4j.examples.recurrent.ProcessNews.TweetsIterator.Builder(dataDirectory=" +
-                    this.dataDirectory + ", wordVectors=" + this.wordVectors +
-                    ", batchSize=" + this.batchSize + ", truncateLength="
-                    + this.truncateLength + ", train=" + this.train + ")";
-        }
     }
 }
 
